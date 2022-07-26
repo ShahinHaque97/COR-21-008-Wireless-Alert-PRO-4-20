@@ -34,7 +34,7 @@
 #define MCP3421_SENSOR_ADDR     0x68
 #define I2C_MASTER_NUM          0
 
-#define i2c_port  I2C_NUM_0
+#define I2C_PORT  I2C_NUM_0
 #define i2c_gpio_sda  1
 #define i2c_gpio_scl  0
 #define i2c_frequency 100000

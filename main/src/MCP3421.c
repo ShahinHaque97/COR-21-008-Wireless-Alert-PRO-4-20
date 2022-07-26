@@ -30,7 +30,7 @@
 
 esp_err_t MCP3421_initialize(void)
 {
-    i2c_driver_install(i2c_port, I2C_MODE_MASTER, I2C_MASTER_RX_BUF_DISABLE, I2C_MASTER_TX_BUF_DISABLE, 0);
+    i2c_driver_install(I2C_PORT, I2C_MODE_MASTER, I2C_MASTER_RX_BUF_DISABLE, I2C_MASTER_TX_BUF_DISABLE, 0);
     i2c_config_t conf = {
             .mode = I2C_MODE_MASTER,
             .sda_io_num = i2c_gpio_sda,
@@ -40,7 +40,7 @@ esp_err_t MCP3421_initialize(void)
             .master.clk_speed = i2c_frequency,
             // .clk_flags = 0,          /*!< Optional, you can use I2C_SCLK_SRC_FLAG_* flags to choose i2c source clock here. */
     };
-    return i2c_param_config(i2c_port, &conf);
+    return i2c_param_config(I2C_PORT, &conf);
 }
 
 esp_err_t i2c_scanner(int argc, char **argv)
@@ -61,7 +61,7 @@ esp_err_t i2c_scanner(int argc, char **argv)
             i2c_master_start(cmd);
             i2c_master_write_byte(cmd, (address << 1) | WRITE_BIT, ACK_CHECK_EN);
             i2c_master_stop(cmd);
-            esp_err_t ret = i2c_master_cmd_begin(i2c_port, cmd, 50 / portTICK_RATE_MS);
+            esp_err_t ret = i2c_master_cmd_begin(I2C_PORT, cmd, 50 / portTICK_RATE_MS);
             i2c_cmd_link_delete(cmd);
             if (ret == ESP_OK)
             {
@@ -76,7 +76,7 @@ esp_err_t i2c_scanner(int argc, char **argv)
         }
         printf("\r\n");
     }
-    //i2c_driver_delete(i2c_port);
+    //i2c_driver_delete(I2C_PORT);
     return 0;
 }
 

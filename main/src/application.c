@@ -94,64 +94,6 @@ uint8_t low_output_test(int argc, char **argv)
     return 0;
 }
 
-uint8_t compare_results()
-{
-    float MS1100_current;
-    float MCP3421_current;
-    uint32_t MCP3421_raw_data;
-
-
-    for(int i = 0; i < 3;i++)
-    {
-        reset_all_current_pins();
-        if (i == 0)
-        {
-            set_pin(low_source, 1);
-        } else if (i == 1)
-        {
-            set_pin(mid_source, 1);
-        } else
-        {
-            set_pin(high_source, 1);
-        }
-
-        MCP3421_set_one_shot_read();
-
-        MCP3421_raw_data = MCP3421_get_raw_data();
-        MCP3421_current = (MCP3421_voltage(MCP3421_raw_data) / load_resistor);
-        MS1100_current_calculation(&MS1100_current);
-
-        printf("MCP3421 current value:   %2.4f mA   \n", MCP3421_current * 1000);
-        printf("MS1100 current value:   %2.4f mA   \n", MS1100_current);
-
-        float diff = 0;
-        if (MS1100_current -  (MCP3421_current * 1000) >= 0)
-        {
-            diff =  MS1100_current -  (MCP3421_current * 1000);
-        } else
-        {
-            diff = (MCP3421_current * 1000) - MS1100_current;
-        }
-
-        if (diff < 0.1)
-        {
-            printf("\033[0;32m");
-            printf("passed");
-            printf(" \033[0;37m");
-        } else
-        {
-            printf("\033[0;31m");
-            printf("failed");
-            printf(" \033[0;37m");
-        }
-
-        printf("\n");
-        printf("\n");
-
-    }
-return 0;
-}
-
 uint8_t mid_output_test(int argc, char **argv)
 {
     printf("mid source has been set  - Value we are looking for: 13.3mA \n");
@@ -253,3 +195,62 @@ esp_err_t MS1100_print_out()
     return 0;
 }
 
+uint8_t compare_results()
+{
+    printf("The threshold for the tolerance is set to 0.1mA  \n");
+    printf("\n");
+    float MS1100_current;
+    float MCP3421_current;
+    uint32_t MCP3421_raw_data;
+
+    for(int i = 0; i < 3;i++)
+    {
+
+        if (i == 0)
+        {
+            set_pin(low_source, 1);
+        } else if (i == 1)
+        {
+            set_pin(mid_source, 1);
+        } else
+        {
+            set_pin(high_source, 1);
+        }
+
+        MCP3421_set_one_shot_read();
+
+        MCP3421_raw_data = MCP3421_get_raw_data();
+        MCP3421_current = (MCP3421_voltage(MCP3421_raw_data) / load_resistor);
+        MS1100_current_calculation(&MS1100_current);
+
+        printf("MCP3421 current value:   %2.4f mA   \n", (MCP3421_current * 1000 * 1.000308719));
+        printf("MS1100 current value:   %2.4f mA   \n", MS1100_current * 1.000271768);
+
+        float diff = 0;
+        if (MS1100_current -  (MCP3421_current * 1000) >= 0)
+        {
+            diff =  MS1100_current -  (MCP3421_current * 1000);
+        } else
+        {
+            diff = (MCP3421_current * 1000) - MS1100_current;
+        }
+
+        if (diff < 0.1)
+        {
+            printf("\033[0;32m");
+            printf("passed");
+            printf(" \033[0;37m");
+        } else
+        {
+            printf("\033[0;31m");
+            printf("failed");
+            printf(" \033[0;37m");
+        }
+
+        vTaskDelay(5000 / portTICK_PERIOD_MS);
+        reset_all_current_pins();
+        printf("\n");
+        printf("\n");
+    }
+    return 0;
+}

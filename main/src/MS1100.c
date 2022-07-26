@@ -23,11 +23,13 @@
 /******************************* DEFINES ********************************/
 #define MAIN_I2C_READ_BIT 1
 #define MAIN_I2C_WRITE_BIT 0
-#define i2c_port  I2C_NUM_0
+#define I2C_PORT  I2C_NUM_0
+#define MS1100_VREF 2.048
 
 /*Conversion factor for going from MS110 reading to the actual output voltage*/
 #define MS1100_READING_TO_V_M 1.00540606909f  /*C of y = Mx+C*/
 #define MS1100_READING_TO_V_C (-0.00541415699f) /*M of y = Mx+C*/
+
 /*Conversion constants to go from Output voltage to loop current*/
 #define VOLTAGE_TO_CURRENT_M 0.09187963768f /*M of y = Mx+C*/
 #define VOLTAGE_TO_CURRENT_C 0.00154311594f /*C of y = Mx+C*/
@@ -97,7 +99,7 @@ uint8_t MS1100_current_calculation(float *current_out)
         uint32_t raw_adc = ((register_data[0] << 8) + register_data[1]);
 
         /*Output code = ( 16384 * 2 * VREF ) / (𐤃 Vin ) */
-        voltage =  (raw_adc * 2.048f) / (16384.0f * 2.0f);
+        voltage =  (raw_adc * MS1100_VREF) / (16384.0f * 2.0f);
         *current_out = ((voltage - VOLTAGE_TO_CURRENT_C) / VOLTAGE_TO_CURRENT_M);
 
         retVal = true;
@@ -131,7 +133,7 @@ esp_err_t MS1100_read_to_slave(uint8_t register_data[3])
     i2c_master_write_byte(cmd, (MS1100_device_address<<1 | MAIN_I2C_READ_BIT), true);
     i2c_master_read(cmd, register_data, 3, I2C_MASTER_LAST_NACK);
     i2c_master_stop(cmd);
-    esp_err_t  err = i2c_master_cmd_begin(i2c_port, cmd, 50 / portTICK_RATE_MS);
+    esp_err_t  err = i2c_master_cmd_begin(I2C_PORT, cmd, 50 / portTICK_RATE_MS);
     i2c_cmd_link_delete(cmd);
 
     return err;
@@ -160,7 +162,7 @@ esp_err_t MS1100_setup_config_register()
     i2c_master_write_byte(cmd, (data), I2C_MASTER_LAST_NACK);
 
     i2c_master_stop(cmd);
-    esp_err_t  err = i2c_master_cmd_begin(i2c_port, cmd, 50 / portTICK_RATE_MS);
+    esp_err_t  err = i2c_master_cmd_begin(I2C_PORT, cmd, 50 / portTICK_RATE_MS);
 
     i2c_cmd_link_delete(cmd);
 
@@ -176,7 +178,7 @@ esp_err_t MS1100_general_call_reset()
 
     i2c_master_write_byte(cmd, (0x06), I2C_MASTER_ACK);
     i2c_master_stop(cmd);
-    esp_err_t  err = i2c_master_cmd_begin(i2c_port, cmd, 50 / portTICK_RATE_MS);
+    esp_err_t  err = i2c_master_cmd_begin(I2C_PORT, cmd, 50 / portTICK_RATE_MS);
 
     i2c_cmd_link_delete(cmd);
     return err;

@@ -24,7 +24,7 @@
 /******************************* DEFINES ********************************/
 #define I2C_MASTER_TX_BUF_DISABLE 0 /*!< I2C master doesn't need buffer */
 #define I2C_MASTER_RX_BUF_DISABLE 0 /*!< I2C master doesn't need buffer */
-#define i2c_port  I2C_NUM_0
+#define I2C_PORT  I2C_NUM_0
 #define i2c_gpio_sda  1
 #define i2c_gpio_scl  0
 #define i2c_frequency 100000
