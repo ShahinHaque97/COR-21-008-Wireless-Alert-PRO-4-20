@@ -1,7 +1,7 @@
 /*
- * @file    X
- * @brief   X
- * @version X
+ * @file    console_dir.C
+ * @brief   file for console commands
+ * @version 26/07/2022
  * @par     (c)   Copyright Corintech Ltd
  *          Ashford Mill, Station Road, Fordingbridge, SP6 1DZ, UK
  *          Tel: +44(0)1425 655655. Fax: +44(0)1425 652756
@@ -50,14 +50,31 @@ void console_register_commands(){
     esp_console_register_mid_current_test(mid_output_test);
     esp_console_register_high_current_test(high_output_test);
     esp_console_register_i2c_scanner(i2c_scanner);
-
     CAT24C04_console_single_read();
     CAT24C04_console_single_write();
     CAT24C04_console_single_page_write();
     esp_console_register_clear();
 
+    esp_console_register_MS1100_read(MS1100_print_out);
+    esp_console_register_MS1100_read_config(MS1100_display_config_register);
+    esp_console_register_compare_ADC(compare_results);
+
 
 }
+
+esp_err_t esp_console_register_compare_ADC(void *function )
+{
+    const esp_console_cmd_t command = {
+            .command = "ADC",
+            .help = "compare the two ADC results",
+            .hint = NULL,
+            .func = function,
+    };
+    return esp_console_cmd_register(&command);
+}
+
+
+
 
 esp_err_t esp_console_register_clear(void)
 {
@@ -113,6 +130,10 @@ esp_err_t esp_console_register_high_current_test(void *function)
     };
     return esp_console_cmd_register(&command);
 }
+
+
+
+
 
 static int clear_screen()
 {

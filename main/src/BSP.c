@@ -1,7 +1,7 @@
 /*
- * @file    X
- * @brief   X
- * @version X
+ * @file    BSP.C
+ * @brief   for initialisation routines
+ * @version 26/07/2022
  * @par     (c)   Copyright Corintech Ltd
  *          Ashford Mill, Station Road, Fordingbridge, SP6 1DZ, UK
  *          Tel: +44(0)1425 655655. Fax: +44(0)1425 652756

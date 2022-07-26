@@ -1,6 +1,6 @@
 /*
  * @file    MCP3421.c
- * @brief   c file for ADC MCP3421.c
+ * @brief   ADC file
  * @version 21/07/2022
  * @par     (c)   Copyright Corintech Ltd
  *          Ashford Mill, Station Road, Fordingbridge, SP6 1DZ, UK

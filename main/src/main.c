@@ -1,6 +1,6 @@
 /*
  * @file    main.c
- * @brief   code to test constant current source
+ * @brief   main program file
  * @version 14/07/2022
  * @par     (c)   Copyright Corintech Ltd
  *          Ashford Mill, Station Road, Fordingbridge, SP6 1DZ, UK
@@ -34,6 +34,7 @@
 
 void app_main(void)
 {
+
     /* init - GPIO - MCP3421 - CAT24C04 */
     BSP_init();
 

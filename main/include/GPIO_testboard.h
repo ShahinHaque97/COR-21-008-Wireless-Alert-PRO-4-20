@@ -1,6 +1,6 @@
 /*
- * @file    GPIO.h
- * @brief   X
+ * @file    GPIO_testboard.h
+ * @brief   header file to for GPIO_testboard.c
  * @version 21/07/2022
  * @par     (c)   Copyright Corintech Ltd
  *          Ashford Mill, Station Road, Fordingbridge, SP6 1DZ, UK
@@ -33,6 +33,7 @@
 void set_pin(int pin_number, int state);
 void configure_pin_output(int pin_number);
 void gpio_init();
+void reset_all_current_pins();
 /******************************* GLOBALS ********************************/
 /*        Globals are to be avoided unless justified and documented */
 /************************************************************************/

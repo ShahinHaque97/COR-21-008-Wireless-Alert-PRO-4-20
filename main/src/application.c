@@ -1,6 +1,6 @@
 /*
  * @file    application.c
- * @brief   X
+ * @brief   main functions for testing ADCs and EEPROMs
  * @version 21/07/2022
  * @par     (c)   Copyright Corintech Ltd
  *          Ashford Mill, Station Road, Fordingbridge, SP6 1DZ, UK
@@ -22,7 +22,10 @@
 /**************************** USER INCLUDES *****************************/
 #include "include/application.h"
 #include "include/MCP3421.h"
+#include "../include/MS1100.h"
 /******************************* DEFINES ********************************/
+
+
 /******************************** ENUMS *********************************/
 /***************************** STRUCTURES *******************************/
 /************************** FUNCTION PROTOTYPES *************************/
@@ -64,7 +67,7 @@ float MCP3421_voltage(uint32_t data_bit_shifted)
 
 //-------------
 
-int low_output_test(int argc, char **argv)
+uint8_t low_output_test(int argc, char **argv)
 {
     printf("low source has been set  - Value we are looking for: 4.3mA \n");
     set_pin(low_source, 1);
@@ -91,7 +94,65 @@ int low_output_test(int argc, char **argv)
     return 0;
 }
 
-int mid_output_test(int argc, char **argv)
+uint8_t compare_results()
+{
+    float MS1100_current;
+    float MCP3421_current;
+    uint32_t MCP3421_raw_data;
+
+
+    for(int i = 0; i < 3;i++)
+    {
+        reset_all_current_pins();
+        if (i == 0)
+        {
+            set_pin(low_source, 1);
+        } else if (i == 1)
+        {
+            set_pin(mid_source, 1);
+        } else
+        {
+            set_pin(high_source, 1);
+        }
+
+        MCP3421_set_one_shot_read();
+
+        MCP3421_raw_data = MCP3421_get_raw_data();
+        MCP3421_current = (MCP3421_voltage(MCP3421_raw_data) / load_resistor);
+        MS1100_current_calculation(&MS1100_current);
+
+        printf("MCP3421 current value:   %2.4f mA   \n", MCP3421_current * 1000);
+        printf("MS1100 current value:   %2.4f mA   \n", MS1100_current);
+
+        float diff = 0;
+        if (MS1100_current -  (MCP3421_current * 1000) >= 0)
+        {
+            diff =  MS1100_current -  (MCP3421_current * 1000);
+        } else
+        {
+            diff = (MCP3421_current * 1000) - MS1100_current;
+        }
+
+        if (diff < 0.1)
+        {
+            printf("\033[0;32m");
+            printf("passed");
+            printf(" \033[0;37m");
+        } else
+        {
+            printf("\033[0;31m");
+            printf("failed");
+            printf(" \033[0;37m");
+        }
+
+        printf("\n");
+        printf("\n");
+
+    }
+return 0;
+}
+
+uint8_t mid_output_test(int argc, char **argv)
 {
     printf("mid source has been set  - Value we are looking for: 13.3mA \n");
     set_pin(mid_source, 1);
@@ -117,7 +178,7 @@ int mid_output_test(int argc, char **argv)
     return 0;
 }
 
-int high_output_test(int argc, char **argv)
+uint8_t high_output_test(int argc, char **argv)
 {
     printf("high source has been set  - Value we are looking for: 20mA \n");
     set_pin(high_source, 1);
@@ -143,4 +204,52 @@ int high_output_test(int argc, char **argv)
     return 0;
 }
 
+
+
+esp_err_t MS1100_print_out()
+{
+    float current;
+    /*  reset MS100 to default settings */
+    //MS1100_general_call_reset();
+
+    /*  set to single conversion mode   */
+
+    set_pin(low_source, 0);
+    set_pin(mid_source, 0);
+    set_pin(high_source, 0);
+
+    uint8_t temp_data[3];
+    printf("-----------------------LOW CURRENT SOURCE ON--------------------- \n");
+
+    set_pin(low_source, 1);
+    int count =1;
+    for(int i = 0; i < count; i++){
+
+        MS1100_current_calculation(&current);
+        printf("current:   %2.10f  \n", current);
+
+    }
+    set_pin(low_source, 0);
+
+    printf("-----------------------MID CURRENT SOURCE ON--------------------- \n");
+    set_pin(mid_source, 1);
+
+    for(int i = 0; i < count; i++){
+        MS1100_current_calculation(&current);
+        printf("current:   %2.10f  \n", current);
+    }
+    set_pin(mid_source, 0);
+
+    printf("-----------------------HIGH CURRENT SOURCE ON-------------------- \n");
+
+    set_pin(high_source, 1);
+
+    for(int i = 0; i < count; i++){
+        MS1100_current_calculation(&current);
+        printf("current:   %2.10f  \n", current);
+    }
+    set_pin(high_source, 0);
+
+    return 0;
+}
 

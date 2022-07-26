@@ -1,5 +1,5 @@
 /*
- * @file    i2c_probe.c
+ * @file    CAT24C04.c
  * @brief   interfacing with the i2c probe (currently with just an EEPROM on it)
  * @version 20/07/2022
  * @par     (c)   Copyright Corintech Ltd

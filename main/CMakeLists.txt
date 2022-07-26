@@ -11,6 +11,6 @@ idf_component_register(SRCS "src/main.c"
                             "include/GPIO_testboard.h"
                             "src/application.c"
                             "include/application.h"
-                            "src/ADS1100.c"
-                            "include/ADS1100.h"
+                            "src/MS1100.c"
+                            "include/MS1100.h"
                             INCLUDE_DIRS ".")

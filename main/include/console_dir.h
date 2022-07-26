@@ -1,6 +1,6 @@
 /*
- * @file    main.h
- * @brief   header file for main.c
+ * @file    console_dir.h
+ * @brief   header file for console_dir.c
  * @version 13/07/2022
  * @par     (c)   Copyright Corintech Ltd
  *          Ashford Mill, Station Road, Fordingbridge, SP6 1DZ, UK
@@ -23,6 +23,7 @@
 #include "include/MCP3421.h"
 #include "include/CAT24C04.h"
 #include "include/application.h"
+#include "../include/MS1100.h"
 /**************************** USER INCLUDES *****************************/
 /******************************* DEFINES ********************************/
 /******************************** ENUMS *********************************/
@@ -35,6 +36,9 @@ esp_err_t esp_console_register_i2c_scanner(void *function );
 esp_err_t esp_console_register_low_current_test(void *function);
 esp_err_t esp_console_register_mid_current_test(void *function);
 esp_err_t esp_console_register_high_current_test(void *function);
+esp_err_t esp_console_register_compare_ADC(void *function );
+
+
 void console_init();
 void console_new_reply();
 void console_register_commands();

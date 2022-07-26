@@ -1,6 +1,6 @@
 /*
  * @file    application.h
- * @brief   X
+ * @brief   header file for application.c
  * @version 21/07/2022
  * @par     (c)   Copyright Corintech Ltd
  *          Ashford Mill, Station Road, Fordingbridge, SP6 1DZ, UK
@@ -31,9 +31,10 @@
 /***************************** STRUCTURES *******************************/
 /************************** FUNCTION PROTOTYPES *************************/
 float MCP3421_voltage(uint32_t data_bit_shifted);
-int low_output_test(int argc, char **argv);
-int mid_output_test(int argc, char **argv);
-int high_output_test(int argc, char **argv);
+uint8_t low_output_test(int argc, char **argv);
+uint8_t mid_output_test(int argc, char **argv);
+uint8_t high_output_test(int argc, char **argv);
+uint8_t compare_results();
 /******************************* GLOBALS ********************************/
 /*        Globals are to be avoided unless justified and documented */
 /************************************************************************/

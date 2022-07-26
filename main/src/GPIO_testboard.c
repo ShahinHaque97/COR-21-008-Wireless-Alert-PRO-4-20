@@ -1,6 +1,6 @@
 /*
- * @file    GPIO.c
- * @brief   X
+ * @file    GPIO_testboard.c
+ * @brief   GPIO file for turning current source pins
  * @version 21/07/2022
  * @par     (c)   Copyright Corintech Ltd
  *          Ashford Mill, Station Road, Fordingbridge, SP6 1DZ, UK
@@ -33,6 +33,13 @@
 void set_pin(int pin_number, int state)
 {
     gpio_set_level(pin_number, state);
+}
+
+void reset_all_current_pins()
+{
+    gpio_set_level(low_source, 0);
+    gpio_set_level(mid_source, 0);
+    gpio_set_level(high_source, 0);
 }
 
 void configure_pin_output(int pin_number)
