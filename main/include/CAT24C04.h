@@ -40,7 +40,7 @@
 /************************** FUNCTION PROTOTYPES *************************/
 esp_err_t CAT24C04_initialize(void);
 esp_err_t CAT24C04_selective_read_to_slave(uint8_t reg_addr, uint8_t *data, uint8_t register_location);
-esp_err_t CAT24C04_page_write_to_slave(uint8_t reg_addr, uint8_t register_location, uint8_t data[],uint8_t len );
+esp_err_t CAT24C04_page_write_to_slave(uint8_t reg_addr, uint8_t register_location, uint8_t data[],uint16_t len );
 esp_err_t CAT24C04_console_single_write(void);
 esp_err_t CAT24C04_console_single_read(void);
 esp_err_t CAT24C04_console_single_page_write(void);
@@ -48,6 +48,9 @@ esp_err_t CAT24C04_console_single_page_write(void);
 uint8_t CAT24C04_read_printout(int argc, char **argv);
 uint8_t CAT24C04_write_printout(int argc, char **argv);
 uint8_t CAT24C04_pageWrite_printout(int argc, char **argv);
+bool CAT24C04_write_16byte_page(uint16_t address, uint8_t dataIn[], uint16_t len);
+bool CAT24C04_writeByte(uint16_t address, uint8_t dataIn);
+
 /******************************* GLOBALS ********************************/
 /*        Globals are to be avoided unless justified and documented */
 /************************************************************************/

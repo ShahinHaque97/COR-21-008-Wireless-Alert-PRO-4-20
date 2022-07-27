@@ -25,6 +25,7 @@
 #include "include/application.h"
 #include "../include/MS1100.h"
 /**************************** USER INCLUDES *****************************/
+#include "../include/Probe_EEPROM.h"
 /******************************* DEFINES ********************************/
 /******************************** ENUMS *********************************/
 /****************************** TYPEDEFS ********************************/
@@ -37,6 +38,7 @@ esp_err_t esp_console_register_low_current_test(void *function);
 esp_err_t esp_console_register_mid_current_test(void *function);
 esp_err_t esp_console_register_high_current_test(void *function);
 esp_err_t esp_console_register_compare_ADC(void *function );
+esp_err_t esp_console_register_EEPROM_datawrite_test(void *function );
 
 
 void console_init();

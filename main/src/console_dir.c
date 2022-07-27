@@ -58,9 +58,22 @@ void console_register_commands(){
     esp_console_register_MS1100_read(MS1100_print_out);
     esp_console_register_MS1100_read_config(MS1100_display_config_register);
     esp_console_register_compare_ADC(compare_results);
-
+    esp_console_register_EEPROM_datawrite_test(eeprom_write_struct);
 
 }
+
+esp_err_t esp_console_register_EEPROM_datawrite_test(void *function )
+{
+    const esp_console_cmd_t command = {
+            .command = "test",
+            .help = "test function to write EEPROM data",
+            .hint = NULL,
+            .func = function,
+    };
+    return esp_console_cmd_register(&command);
+}
+
+
 
 esp_err_t esp_console_register_compare_ADC(void *function )
 {

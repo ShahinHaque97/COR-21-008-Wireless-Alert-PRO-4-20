@@ -1,7 +1,7 @@
 /*
  * @file    MSS1100.c
  * @brief   MS1100 ADC file
- * @version 22/07/2022
+ * @version 27/07/2022
  * @par     (c)   Copyright Corintech Ltd
  *          Ashford Mill, Station Road, Fordingbridge, SP6 1DZ, UK
  *          Tel: +44(0)1425 655655. Fax: +44(0)1425 652756

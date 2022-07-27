@@ -1,7 +1,7 @@
 /*
  * @file    main.c
  * @brief   main program file
- * @version 14/07/2022
+ * @version 27/07/2022
  * @par     (c)   Copyright Corintech Ltd
  *          Ashford Mill, Station Road, Fordingbridge, SP6 1DZ, UK
  *          Tel: +44(0)1425 655655. Fax: +44(0)1425 652756

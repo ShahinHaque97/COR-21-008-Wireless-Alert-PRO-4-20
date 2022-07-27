@@ -13,4 +13,6 @@ idf_component_register(SRCS "src/main.c"
                             "include/application.h"
                             "src/MS1100.c"
                             "include/MS1100.h"
+                            "src/Probe_EEPROM.c"
+                            "include/Probe_EEPROM.h"
                             INCLUDE_DIRS ".")

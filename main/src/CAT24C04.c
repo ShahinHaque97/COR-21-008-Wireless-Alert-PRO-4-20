@@ -40,7 +40,7 @@ typedef struct {
 /************************** FUNCTION PROTOTYPES *************************/
 bool CAT24C04_readByte(uint16_t address, uint8_t *dataOut);
 bool CAT24C04_writeByte(uint16_t address, uint8_t dataIn);
-bool CAT24C04_write_16byte_page(uint16_t address, uint8_t dataIn[], uint8_t len);
+//bool CAT24C04_write_16byte_page(uint16_t address, uint8_t dataIn[], uint8_t len);
 /******************************* CONSTANTS ******************************/
 static const char *TAG = "I2C_PROBE";
 /******************************* VARIABLES ******************************/
@@ -101,17 +101,19 @@ esp_err_t CAT24C04_selective_write_to_slave(uint8_t reg_addr, uint8_t register_l
     return err;
 }
 
-esp_err_t CAT24C04_page_write_to_slave(uint8_t reg_addr, uint8_t register_location, uint8_t data[],uint8_t len )
+esp_err_t CAT24C04_page_write_to_slave(uint8_t reg_addr, uint8_t register_location, uint8_t data[],uint16_t len )
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (reg_addr << 1) | MAIN_I2C_WRITE_BIT, true);
     i2c_master_write_byte(cmd, register_location, true);
 
+    i2c_master_write(cmd, data, len, true);
+    /*
     for (int i = 0; i < len;i++ )
     {
         i2c_master_write_byte(cmd, data[i], true);
-    }
+    }*/
 
 
     i2c_master_stop(cmd);
@@ -241,8 +243,9 @@ uint8_t CAT24C04_pageWrite_printout(int argc, char **argv)
 
 
 /*  interface with EEPROM */
-bool CAT24C04_write_16byte_page(uint16_t address, uint8_t dataIn[], uint8_t len)
+bool CAT24C04_write_16byte_page(uint16_t address, uint8_t dataIn[], uint16_t len)
 {
+    ESP_LOGI(TAG, "Writting %d bytes to %d", len, address);
     bool retVal = false;
     /* EEPROM is organised into 2 "books" of 2kb so when addressing values
      * from over the 1st 2k, the address is incremented */

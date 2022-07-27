@@ -1,7 +1,7 @@
 /*
  * @file    application.c
  * @brief   main functions for testing ADCs and EEPROMs
- * @version 21/07/2022
+ * @version 27/07/2022
  * @par     (c)   Copyright Corintech Ltd
  *          Ashford Mill, Station Road, Fordingbridge, SP6 1DZ, UK
  *          Tel: +44(0)1425 655655. Fax: +44(0)1425 652756
@@ -223,8 +223,8 @@ uint8_t compare_results()
         MCP3421_current = (MCP3421_voltage(MCP3421_raw_data) / load_resistor);
         MS1100_current_calculation(&MS1100_current);
 
-        printf("MCP3421 current value:   %2.4f mA   \n", (MCP3421_current * 1000 * 1.000308719));
-        printf("MS1100 current value:   %2.4f mA   \n", MS1100_current * 1.000271768);
+        printf("MCP3421 current value:   %2.5f mA   \n", ((MCP3421_current * 1000) + 0.00094) / 0.99989);
+        printf("MS1100 current value:   %2.5f mA   \n", (MS1100_current + 0.06329) / 1.00698);
 
         float diff = 0;
         if (MS1100_current -  (MCP3421_current * 1000) >= 0)
@@ -247,7 +247,7 @@ uint8_t compare_results()
             printf(" \033[0;37m");
         }
 
-        vTaskDelay(5000 / portTICK_PERIOD_MS);
+        vTaskDelay(300 / portTICK_PERIOD_MS);
         reset_all_current_pins();
         printf("\n");
         printf("\n");
