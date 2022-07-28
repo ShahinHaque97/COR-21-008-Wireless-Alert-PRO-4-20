@@ -197,8 +197,8 @@ esp_err_t MS1100_print_out()
 
 uint8_t compare_results()
 {
-    printf("The threshold for the tolerance is set to 0.1mA  \n");
-    printf("\n");
+   //printf("The threshold for the tolerance is set to 0.1mA  \n");
+   // printf("\n");
     float MS1100_current;
     float MCP3421_current;
     uint32_t MCP3421_raw_data;
@@ -223,10 +223,15 @@ uint8_t compare_results()
         MCP3421_current = (MCP3421_voltage(MCP3421_raw_data) / load_resistor);
         MS1100_current_calculation(&MS1100_current);
 
-        printf("MCP3421 current value:   %2.5f mA   \n", ((MCP3421_current * 1000) + 0.00094) / 0.99989);
-        printf("MS1100 current value:   %2.5f mA   \n", (MS1100_current + 0.06329) / 1.00698);
+        //printf("MCP3421 current value:   %2.5f mA   \n", ((MCP3421_current * 1000) + 0.00094) / 0.99989);
+       // printf("MS1100 current value:   %2.5f mA   \n", (MS1100_current + 0.06329) / 1.00698);
 
-        float diff = 0;
+
+        printf("MCP3421,%2.5f,MS1100,%2.5f\n",(
+                         ((MCP3421_current * 1000) + 0.00094) / 0.99989),
+                                             ((MS1100_current + 0.06329) / 1.00698));
+
+       /* float diff = 0;
         if (MS1100_current -  (MCP3421_current * 1000) >= 0)
         {
             diff =  MS1100_current -  (MCP3421_current * 1000);
@@ -246,11 +251,11 @@ uint8_t compare_results()
             printf("failed");
             printf(" \033[0;37m");
         }
-
+*/
         vTaskDelay(300 / portTICK_PERIOD_MS);
         reset_all_current_pins();
-        printf("\n");
-        printf("\n");
+       // printf("\n");
+       // printf("\n");
     }
     return 0;
 }

@@ -50,7 +50,8 @@ uint8_t CAT24C04_write_printout(int argc, char **argv);
 uint8_t CAT24C04_pageWrite_printout(int argc, char **argv);
 bool CAT24C04_write_16byte_page(uint16_t address, uint8_t dataIn[], uint16_t len);
 bool CAT24C04_writeByte(uint16_t address, uint8_t dataIn);
-
+bool CAT24C04_readByte(uint16_t address, uint8_t *dataOut);
+bool CAT24C04_writeByte(uint16_t address, uint8_t dataIn);
 /******************************* GLOBALS ********************************/
 /*        Globals are to be avoided unless justified and documented */
 /************************************************************************/

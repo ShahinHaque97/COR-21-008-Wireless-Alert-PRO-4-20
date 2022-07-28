@@ -24,6 +24,7 @@
 #include <stdio.h>
 /**************************** USER INCLUDES *****************************/
 #include "include/CAT24C04.h"
+
 /******************************* DEFINES ********************************/
 #define BSP_I2C_EEPROM_PAGE_SIZE 256
 #define BSP_EEPROM_SIZE_OF_CAL_SIGNATURE 32
@@ -73,6 +74,8 @@ typedef union {
 
 /************************** FUNCTION PROTOTYPES *************************/
 uint8_t eeprom_write_struct();
+uint16_t compute_checksum(bsp_eeprom_contents_t in_eeprom);
+uint8_t read_entire_EEPROM();
 /******************************* GLOBALS ********************************/
 /*        Globals are to be avoided unless justified and documented */
 /************************************************************************/

@@ -38,8 +38,7 @@ typedef struct {
     struct arg_end *end;
 } cstb_readArgs_t;
 /************************** FUNCTION PROTOTYPES *************************/
-bool CAT24C04_readByte(uint16_t address, uint8_t *dataOut);
-bool CAT24C04_writeByte(uint16_t address, uint8_t dataIn);
+
 //bool CAT24C04_write_16byte_page(uint16_t address, uint8_t dataIn[], uint8_t len);
 /******************************* CONSTANTS ******************************/
 static const char *TAG = "I2C_PROBE";

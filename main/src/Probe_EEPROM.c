@@ -25,12 +25,23 @@
 /***************************** STRUCTURES *******************************/
 /************************** FUNCTION PROTOTYPES *************************/
 /******************************* CONSTANTS ******************************/
+#define SIZEOF_CHECKSUM_BYTES 2
 /******************************* VARIABLES ******************************/
 /*************************** PUBLIC FUNCTIONS ***************************/
 
+uint16_t compute_checksum(bsp_eeprom_contents_t in_eeprom) {
+    uint16_t checksum = 0;
+    for (uint16_t idx = 0; idx < BSP_I2C_EEPROM_PAGE_SIZE - SIZEOF_CHECKSUM_BYTES; idx++) {
+        checksum += in_eeprom.contents[idx];
+    }
+    /*Compute the 2's Complement */
+    checksum = (~checksum + 1);
+    /*reverse endianness*/
+    return (checksum >> 8) | ((checksum & 0xFF) << 8);
+}
+
 uint8_t eeprom_write_struct(){
     printf("---START EEPROM STRUCT TEST ROUTINE--- \n \n \n");
-
 
     bsp_probe_eeprom_420specificData_t probe_eeprom_specificData;
     //probe_eeprom_specificData.reserved;
@@ -41,20 +52,20 @@ uint8_t eeprom_write_struct(){
 
     bsp_eeprom_contents_t probe_eeprom_contents;
 
-    probe_eeprom_contents.advancedStructure.key_marker                  = 0x1111;               /*2*/
-    probe_eeprom_contents.advancedStructure.probe_type                  = 0x2222;               /*2*/
-    probe_eeprom_contents.advancedStructure.eeprom_structure_version    = 0x33;   /*1*/
-    probe_eeprom_contents.advancedStructure.probe_hw_version            = 0x44;           /*1*/
-    probe_eeprom_contents.advancedStructure.year_of_manufacture         = 0x55;        /*1*/  //2022
-    probe_eeprom_contents.advancedStructure.week_of_manufacture         = 0x66;        /*1*/ //Week 30 -  July 26 to Aug 1
-    probe_eeprom_contents.advancedStructure.batch_number                = 0x77777777;         /*4*/
-    probe_eeprom_contents.advancedStructure.serial_number               = 0x88888888;        /*4*/
-    probe_eeprom_contents.advancedStructure.channel_count               = 0x99;              /*1*/
+    probe_eeprom_contents.advancedStructure.key_marker                  = 0xEFBE;    /*2*/
+    probe_eeprom_contents.advancedStructure.probe_type                  = 0x0103;    /*2*/
+    probe_eeprom_contents.advancedStructure.eeprom_structure_version    = 0x00;      /*1*/
+    probe_eeprom_contents.advancedStructure.probe_hw_version            = 0x00;      /*1*/
+    probe_eeprom_contents.advancedStructure.year_of_manufacture         = 0x00;      /*1*/ //2022
+    probe_eeprom_contents.advancedStructure.week_of_manufacture         = 0x00;      /*1*/ //Week 30 -  July 26 to Aug 1
+    probe_eeprom_contents.advancedStructure.batch_number                = 0x00000000;/*4*/
+    probe_eeprom_contents.advancedStructure.serial_number               = 0x00000000;/*4*/
+    probe_eeprom_contents.advancedStructure.channel_count               = 0x01;      /*1*/
 
     //probe_eeprom_contents.advancedStructure.reserved_a;
     //probe_eeprom_contents.advancedStructure.channelCals
-    probe_eeprom_contents.advancedStructure.cal_exp_date                = 0x00;
-    probe_eeprom_contents.advancedStructure.cal_set_date                = 0x0;
+    probe_eeprom_contents.advancedStructure.cal_exp_date                = 0x00000000;
+    probe_eeprom_contents.advancedStructure.cal_set_date                = 0x00000000;
 
     //probe_eeprom_contents.advancedStructure.signature;
 
@@ -64,24 +75,61 @@ uint8_t eeprom_write_struct(){
 
     // probe_eeprom_contents.advancedStructure.reserved_c;
 
-    probe_eeprom_contents.advancedStructure.checksum =0x00; // memory location 254
+    probe_eeprom_contents.advancedStructure.checksum =compute_checksum(probe_eeprom_contents); // memory location 254
 
-    /* write data from union to  */
-    for(uint16_t address = 0; address < 256; address++)
-    {
-        CAT24C04_writeByte(address,probe_eeprom_contents.contents[address]);
 
-        vTaskDelay(50 / portTICK_PERIOD_MS);
+    do {
+        /* write data from union to  */
+        for(uint16_t address = 0; address < 256; address++)
+        {
 
-        /* duplicate data to second EEPROM book */
-        CAT24C04_writeByte((address + 0x0100),probe_eeprom_contents.contents[address]);
-        vTaskDelay(50 / portTICK_PERIOD_MS);
-        printf("data: [%d / 255] \n",address);
-    }
+                if (false == CAT24C04_writeByte(address, probe_eeprom_contents.contents[address])) {
+                    /* Failed to write to EEPROM book 1, cannot continue */
+                    break;
+                }
+                vTaskDelay(50 / portTICK_PERIOD_MS);
+                printf("EEPROM book 1 memory location: [%d / 255] \n", address);
 
+                if (false == CAT24C04_writeByte((address + 0x0100), probe_eeprom_contents.contents[address])) {
+                    /* Failed to write to EEPROM book 2, cannot continue */
+                    break;
+                }
+
+                /* duplicate data to second EEPROM book */
+                vTaskDelay(50 / portTICK_PERIOD_MS);
+                printf("EEPROM book 2 memory location: [%d / 255] \n \n", address);
+
+
+
+        }
+    } while(false);
     printf("---END EEPROM STRUCT TEST ROUTINE--- \n \n \n");
 
 return 0;
 }
+
+uint8_t read_entire_EEPROM()
+{
+    //uint32_t address = 0x00;
+    uint8_t data;
+
+    for(uint16_t address = 0; address < 512; address++)
+    {
+        if(false == CAT24C04_readByte(address, &data))
+        {
+            /* Failed to read the eeprom, cannot continue */
+        }
+        else {
+            printf("Location: %d - 0x%04X     Value 0x%02X \n", address,address, data);
+        }
+    }
+
+
+
+    return 0;
+}
+
+
+
 
 

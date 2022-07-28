@@ -20,12 +20,13 @@
 /**************************** LIB INCLUDES ******************************/
 #include "esp_log.h"
 #include "esp_console.h"
+
+/**************************** USER INCLUDES *****************************/
+#include "../include/Probe_EEPROM.h"
 #include "include/MCP3421.h"
 #include "include/CAT24C04.h"
 #include "include/application.h"
 #include "../include/MS1100.h"
-/**************************** USER INCLUDES *****************************/
-#include "../include/Probe_EEPROM.h"
 /******************************* DEFINES ********************************/
 /******************************** ENUMS *********************************/
 /****************************** TYPEDEFS ********************************/
@@ -39,7 +40,7 @@ esp_err_t esp_console_register_mid_current_test(void *function);
 esp_err_t esp_console_register_high_current_test(void *function);
 esp_err_t esp_console_register_compare_ADC(void *function );
 esp_err_t esp_console_register_EEPROM_datawrite_test(void *function );
-
+esp_err_t esp_console_register_EEPROM_read_all(void *function );
 
 void console_init();
 void console_new_reply();
